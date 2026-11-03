@@ -1,0 +1,74 @@
+
+-- TCL 
+-- transaction control langauage 
+
+select * from employee ;
+
+
+create table students
+(id  int  , name varchar(100)  , age int) ;
+
+
+-- commit ,  rollback  , savepoint 
+
+insert  into  students
+values
+(1  , "Siya", 12) ;
+
+update students 
+set  id  =  2 where id =  1  ;
+
+set sql_safe_updates  = 0 ;
+
+select * from students  ;
+
+
+
+set autocommit =  0 ;
+update students 
+set  id  =  3 where id =  2 ;
+
+start transaction ;
+update students 
+set  id  =  3 where id =  2 ;
+
+commit ;
+
+
+insert  into students
+values
+(1 , "Samiksha", 20) ;
+
+
+start transaction ;
+update  students set id  =  2  where id  =  1 ;
+select * from students  ;
+rollback  ;
+
+select * from  students ;
+
+start transaction ;
+update  students set id  =  2;
+select * from students  ;
+rollback  ;
+
+
+
+
+-- savepoint  
+
+start transaction  ;
+
+update students set id  =  4 where id  =  3 ;
+
+savepoint sp1 ;
+
+update students set id  =  2 where id  =  1 ;
+
+ select * from  students ;
+
+rollback to savepoint sp1 ;
+
+/*rollback ; */
+
+commit ;

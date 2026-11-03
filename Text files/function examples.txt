@@ -1,0 +1,210 @@
+
+
+delimiter //
+create  function  num_sqaure1(n float) 
+returns  float  
+begin  
+return  n*n ;
+end  //
+delimiter  ;
+
+select  num_sqaure(6.7);
+
+
+delimiter //
+create  function empdetails(id  int)
+returns  varchar(100)
+reads  sql data
+begin  
+declare ename varchar(100) ;
+select  customername from emp  where customernumber  =  id into  ename  ;
+return  ename ;
+end  //
+delimiter  ;
+
+select  empdetails(103);
+delimiter  //
+create function  greater_num(a int,  b int) 
+returns  int  
+deterministic 
+begin 
+if a> b then 
+return  a ;
+else  
+return  b  ;
+end  if ;
+end  // 
+
+select   greater_num(1.2 ,34.56);
+create index cust_num 
+on 
+emp(customernumber) ;
+
+
+
+
+
+
+
+DELIMITER //
+
+CREATE FUNCTION CheckEvenOdd(n INT)
+RETURNS VARCHAR(10)
+DETERMINISTIC
+BEGIN
+    IF MOD(n,2)=0 THEN
+        RETURN 'Even';
+    ELSE
+        RETURN 'Odd';
+    END IF;
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE FUNCTION GetGrade(marks INT)
+RETURNS CHAR(1)
+DETERMINISTIC
+BEGIN
+    IF marks >= 90 THEN
+        RETURN 'A';
+    ELSEIF marks >= 75 THEN
+        RETURN 'B';
+    ELSEIF marks >= 60 THEN
+        RETURN 'C';
+    ELSE
+        RETURN 'D';
+    END IF;
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE FUNCTION GetBonus(salary DECIMAL(10,2))
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    RETURN salary * 0.10;
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE FUNCTION GetSalary(p_empid INT)
+RETURNS DECIMAL(10,2)
+READS SQL DATA
+BEGIN
+    DECLARE v_salary DECIMAL(10,2);
+
+    SELECT Salary
+    INTO v_salary
+    FROM Employee
+    WHERE EmpID = p_empid;
+
+    RETURN v_salary;
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE FUNCTION SmallestNum(a INT,b INT,c INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    IF a<=b AND a<=c THEN
+        RETURN a;
+    ELSEIF b<=a AND b<=c THEN
+        RETURN b;
+    ELSE
+        RETURN c;
+    END IF;
+END //
+
+DELIMITER ;
+
+
+
+DELIMITER //
+
+CREATE FUNCTION ReverseString(str VARCHAR(100))
+RETURNS VARCHAR(100)
+DETERMINISTIC
+BEGIN
+    RETURN REVERSE(str);
+END //
+
+DELIMITER ;
+
+
+
+CREATE FUNCTION FactorialNum(n INT)
+RETURNS BIGINT
+DETERMINISTIC
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    DECLARE fact BIGINT DEFAULT 1;
+
+    WHILE i<=n DO
+        SET fact=fact*i;
+        SET i=i+1;
+    END WHILE;
+
+    RETURN fact;
+END;
+
+
+
+CREATE FUNCTION IsLeapYear(y INT)
+RETURNS VARCHAR(5)
+DETERMINISTIC
+BEGIN
+    IF (y%400=0) OR (y%4=0 AND y%100<>0) THEN
+        RETURN 'Yes';
+    ELSE
+        RETURN 'No';
+    END IF;
+END;
+
+
+
+CREATE FUNCTION FirstChar(str VARCHAR(100))
+RETURNS CHAR(1)
+DETERMINISTIC
+BEGIN
+    RETURN LEFT(str,1);
+END;
+
+
+
+
+
+
+
+DELIMITER //
+
+CREATE FUNCTION ReverseText(str VARCHAR(100))
+RETURNS VARCHAR(100)
+DETERMINISTIC
+BEGIN
+    DECLARE rev VARCHAR(100) DEFAULT '';
+    DECLARE i INT;
+
+    SET i = LENGTH(str);
+
+    WHILE i > 0 DO
+        SET rev = CONCAT(rev, SUBSTRING(str, i, 1));
+        SET i = i - 1;
+    END WHILE;
+
+    RETURN rev;
+END //
+
+DELIMITER ;

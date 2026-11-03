@@ -1,0 +1,138 @@
+| Feature        | `SQLEXCEPTION`                               | `SQLWARNING`                                          |
+| -------------- | -------------------------------------------- | ----------------------------------------------------- |
+| Handles        | Errors                                       | Warnings                                              |
+| Severity       | High                                         | Low                                                   |
+| Execution      | Usually stops the statement                  | Statement may still succeed                           |
+| SQLSTATE Class | Not '00', '01', '02'                         | Starts with '01'                                      |
+| Examples       | Table not found, duplicate key, syntax error | Division by zero, data truncation, value out of range |
+| Handler Used   | `DECLARE HANDLER FOR SQLEXCEPTION`           | `DECLARE HANDLER FOR SQLWARNING`                      |
+
+
+
+SQLWARNING handlers are used when MySQL generates a warning but not a fatal error. The procedure continues to run unless you handle the warning.
+
+Common situations that generate SQL Warnings
+Data truncation
+Value out of range
+Inserting invalid date (depending on SQL mode)
+String too long for a column
+Division by zero (in some SQL modes)
+
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE TestException()
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        SELECT 'Error Handled';
+    END;
+
+    SELECT * FROM UnknownTable;
+
+    SELECT 'Hello';
+    SELECT "print" ;
+END //
+
+DELIMITER ;
+
+
+drop procedure TestException;
+CALL TestException() ;
+
+
+-----------------------------------------------------------------
+
+DELIMITER //
+
+CREATE PROCEDURE TestException1()
+BEGIN
+    DECLARE continue HANDLER FOR SQLEXCEPTION
+    BEGIN
+        SELECT 'Error Handled';
+    END;
+
+    SELECT * FROM UnknownTable;
+
+    SELECT 'Hello';
+    SELECT "print" ;
+END //
+
+DELIMITER ;
+
+call TestException1() ;
+
+----------------------------------------------------------------------------
+
+
+Example 2: SQLWARNING
+
+DELIMITER //
+
+CREATE PROCEDURE TestWarning()
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLWARNING
+    BEGIN
+        SELECT 'Warning Handled';
+    END;
+
+    SELECT 10/0;
+
+    SELECT 'Hello';
+END //
+
+DELIMITER ;
+
+----------------------------------------------------------------------------
+
+
+
+CREATE TABLE Employee(
+    Name VARCHAR(5)
+);
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE TestWarning()
+BEGIN
+    DECLARE CONTINUE HANDLER FOR SQLWARNING
+    BEGIN
+        SELECT 'Warning occurred' AS Message;
+    END;
+
+    INSERT INTO Employee
+    VALUES ('Alexander');
+    
+    SELECT 'Insert Completed' AS Status;
+END //
+
+DELIMITER ;
+
+
+---------------------------------------------------------------------------
+CREATE TABLE Marks(
+    Score TINYINT
+);
+
+
+DELIMITER //
+
+CREATE PROCEDURE TestMarks()
+BEGIN
+    DECLARE CONTINUE HANDLER FOR SQLWARNING
+    BEGIN
+        SELECT 'Score exceeds range' AS WarningMsg;
+    END;
+
+    INSERT INTO Marks VALUES (500);
+
+    SELECT 'Procedure Finished';
+END //
+
+DELIMITER ;
+
+-----------------------------------------------------------------------------

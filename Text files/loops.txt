@@ -1,0 +1,76 @@
+WHILE condition DO
+    statements;
+END WHILE;
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE PrintNumbers()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+
+    WHILE i <= 5 DO
+        SELECT i;
+        SET i = i + 1;
+    END WHILE;
+END //
+
+DELIMITER ;
+
+
+
+
+
+REPEAT
+    statements;
+UNTIL condition
+END REPEAT;
+
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE PrintNumbers()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+
+    REPEAT
+        SELECT i;
+        SET i = i + 1;
+    UNTIL i > 5
+    END REPEAT;
+END //
+
+DELIMITER ;
+
+
+
+label_name: LOOP
+    statements;
+
+    IF condition THEN
+        LEAVE label_name;
+    END IF;
+END LOOP;
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE PrintNumbers()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+
+    myloop: LOOP
+        SELECT i;
+        SET i = i + 1;
+
+        IF i > 5 THEN
+            LEAVE myloop;
+        END IF;
+    END LOOP myloop;
+END //
+
+DELIMITER ;
